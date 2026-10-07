@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # 1. 数据库服务 (MySQL 8.0)
+  # 首次启动会自动执行 db/init.sql 初始化数据
+  # 数据持久化存储在宿主机 ./data/mysql 目录
+  # ==========================================
+  snowy-mysql:
+    image: mysql:8.0
+    container_name: snowy-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: st_homework_manage
+      TZ: Asia/Shanghai
+    expose:
+      - "3306"
+    ports:
+      # 可选：如果需要通过外部 Navicat 远程连接调试数据库，可放开下面这一行；如不需要可保持注释
+      - "13306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --lower-case-table-names=1
+    networks:
+      - snowy-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 2. 缓存服务 (Redis 7)
+  # 仅限 Docker 内网互联，不对外暴露宿主机端口，保障安全性
+  # ==========================================
+  snowy-redis:
+    image: redis:7-alpine
+    container_name: snowy-redis
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    expose:
+      - "6379"
+    volumes:
+      - ./data/redis:/data
+    command: redis-server --appendonly yes
+    networks:
+      - snowy-network
+
+  # ==========================================
+  # 3. 后端服务 (Spring Boot 3.5.9 / Java 17)
+  # 【安全设计】后端仅在 Docker 内部网络 (snowy-network) 运行，
+  # 前端 Nginx 在容器内网直连 http://snowy-backend:82，
+  # 因此无需映射宿主机 82 端口，外部无法直扫后端，更不需要在宝塔/安全组放行 82！
+  # ==========================================
+  snowy-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: snowy-backend:latest
+    container_name: snowy-backend
+    restart: always
+    expose:
+      - "82"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=snowy-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DB=st_homework_manage
+      - MYSQL_USER=root
+      - MYSQL_PWD=root
+      - REDIS_HOST=snowy-redis
+      - REDIS_PORT=6379
+      - REDIS_PWD=
+      - REDIS_DB=1
+    volumes:
+      # 本地文件上传路径持久化（头像、作业文件、模板、竞赛附件等）
+      - ./data/upload:/defaultUploadFolder
+    depends_on:
+      snowy-mysql:
+        condition: service_healthy
+      snowy-redis:
+        condition: service_started
+    networks:
+      - snowy-network
+
+  # ==========================================
+  # 4. 管理端后台系统 (snowy-admin-web)
+  # 宿主机映射 8081 端口（避免占用默认 81）
+  # 容器内部 Nginx 代理 /api -> snowy-backend:82
+  # ==========================================
+  snowy-admin-web:
+    build:
+      context: ./admin-web
+      dockerfile: Dockerfile
+    image: snowy-admin-web:latest
+    container_name: snowy-admin-web
+    restart: always
+    ports:
+      - "8081:80"
+    depends_on:
+      - snowy-backend
+    networks:
+      - snowy-network
+
+  # ==========================================
+  # 5. 用户端前台门户 (snowy-front-web)
+  # 宿主机映射 8080 端口（避免占用默认 80）
+  # 容器内部 Nginx 代理 /api -> snowy-backend:82
+  # ==========================================
+  snowy-front-web:
+    build:
+      context: ./front-web
+      dockerfile: Dockerfile
+    image: snowy-front-web:latest
+    container_name: snowy-front-web
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - snowy-backend
+    networks:
+      - snowy-network
+
+networks:
+  snowy-network:
+    name: snowy-network
+    driver: bridge

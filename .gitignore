@@ -1,0 +1,94 @@
+# ==============================================================================
+# Git Ignore Configuration for ST_HOMEWORK_MANAGE Project
+# ==============================================================================
+
+# --------------------------------------------------
+# 1. 编译构建产物与大文件 (GitHub 限制单文件不能超过 100MB)
+# --------------------------------------------------
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+!**/src/main/resources/lib/*.jar
+
+dist/
+**/dist/
+.vite/
+**/.vite/
+
+# 部署构建大文件与压缩包
+deploy/backend/*.jar
+deploy/admin-web/dist/
+deploy/front-web/dist/
+deploy.zip
+*.zip
+*.tar.gz
+*.rar
+
+# --------------------------------------------------
+# 2. 依赖管理
+# --------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+jspm_packages/
+web_modules/
+
+# --------------------------------------------------
+# 3. 本地持久化数据与运行时缓存
+# --------------------------------------------------
+deploy/data/
+**/data/mysql/
+**/data/redis/
+**/data/upload/
+dump.rdb
+*.rdb
+
+# 临时脚本与草稿
+scratch/
+create_code/
+tmp/
+temp/
+
+# --------------------------------------------------
+# 4. 日志文件
+# --------------------------------------------------
+logs/
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --------------------------------------------------
+# 5. IDE 与操作系统生成文件
+# --------------------------------------------------
+.idea/
+**/.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+**/.vscode/
+.settings/
+.classpath
+.project
+.DS_Store
+Thumbs.db
+Desktop.ini
+.claude/
+**/.claude/
+.agents/
+**/.agents/
+
+
+
+# --------------------------------------------------
+# 6. 本地私有环境变量 (保留 .env.example)
+# --------------------------------------------------
+.env.local
+.env.*.local
+*.private.properties

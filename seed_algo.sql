@@ -1,0 +1,76 @@
+-- 1. 加入团队
+INSERT INTO st_homework_manage.biz_project_member (ID, PROJECT_ID, STUDENT_ID, MEMBER_ROLE, DUTY_REMARK, MEMBER_STATUS, DELETE_FLAG, CREATE_TIME)
+VALUES ('2106650000000000001', '2106647348441305089', '2106645602797146114', 'MEMBER', '算法核心攻坚与模型开发', 'ACTIVE', 'NOT_DELETE', NOW())
+ON DUPLICATE KEY UPDATE DELETE_FLAG = 'NOT_DELETE';
+
+UPDATE st_homework_manage.biz_project SET CURRENT_MEMBER_COUNT = 2 WHERE ID = '2106647348441305089';
+
+-- 2. 算法任务 1: 最长递增子序列与状态转移优化
+INSERT INTO st_homework_manage.biz_algorithm_task (ID, TITLE, CONTENT_DESC, DIFFICULTY, ALLOWED_SUBMISSION_TYPES, DEADLINE, TEACHER_ID, SAMPLE_INPUT, SAMPLE_OUTPUT, DELETE_FLAG, CREATE_TIME)
+VALUES (
+    '2106651000000000001',
+    '动态规划：最长递增子序列(LIS)与二分贪心优化',
+    '给定一个无序的整数数组 nums ，找到其中最长严格递增子序列的长度。\n进阶挑战：你能将算法的时间复杂度降低到 O(n log n) 吗？请详细提交代码并注明状态转移方程推导过程。',
+    'MEDIUM',
+    'CODE_TEXT,FILE,GIT_URL',
+    DATE_ADD(NOW(), INTERVAL 7 DAY),
+    '2106646462524608514',
+    '[10, 9, 2, 5, 3, 7, 101, 18]',
+    '4 (解释：最长递增子序列是 [2, 3, 7, 101]，因此长度为 4)',
+    'NOT_DELETE',
+    NOW()
+) ON DUPLICATE KEY UPDATE TITLE = VALUES(TITLE);
+
+-- 3. 算法任务 2: 基于图论Dijkstra与A*寻优
+INSERT INTO st_homework_manage.biz_algorithm_task (ID, TITLE, CONTENT_DESC, DIFFICULTY, ALLOWED_SUBMISSION_TYPES, DEADLINE, TEACHER_ID, SAMPLE_INPUT, SAMPLE_OUTPUT, DELETE_FLAG, CREATE_TIME)
+VALUES (
+    '2106651000000000002',
+    '图论综合：最短路径 Dijkstra 优先队列优化与 A* 启发式搜索',
+    '在给定的非负权有向图中，求出源点到所有其他顶点的单源最短路径。要求使用二叉堆或优先队列进行松弛操作优化，确保时间复杂度达到 O((V+E)log V)。',
+    'HARD',
+    'CODE_TEXT,FILE,GIT_URL',
+    DATE_ADD(NOW(), INTERVAL 14 DAY),
+    '2106646462524608514',
+    '5 7\n1 2 2\n1 3 4\n2 3 1\n2 4 7\n3 5 3\n4 5 1\n3 4 2\n1',
+    '0 2 3 5 6',
+    'NOT_DELETE',
+    NOW()
+) ON DUPLICATE KEY UPDATE TITLE = VALUES(TITLE);
+
+-- 4. 算法任务 3: 双指针与滑动窗口
+INSERT INTO st_homework_manage.biz_algorithm_task (ID, TITLE, CONTENT_DESC, DIFFICULTY, ALLOWED_SUBMISSION_TYPES, DEADLINE, TEACHER_ID, SAMPLE_INPUT, SAMPLE_OUTPUT, DELETE_FLAG, CREATE_TIME)
+VALUES (
+    '2106651000000000003',
+    '高效数据结构：单调队列与滑动窗口最大值实战',
+    '给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左端移动到数组的最右端。窗口每次向右移动一位，请返回滑动窗口中的最大值序列。要求时间复杂度为严格 O(n)。',
+    'EASY',
+    'CODE_TEXT,FILE,GIT_URL',
+    DATE_ADD(NOW(), INTERVAL 3 DAY),
+    '2106646462524608514',
+    'nums = [1,3,-1,-3,5,3,6,7], k = 3',
+    '[3, 3, 5, 5, 6, 7]',
+    'NOT_DELETE',
+    NOW()
+) ON DUPLICATE KEY UPDATE TITLE = VALUES(TITLE);
+
+-- 5. 分派任务至项目团队
+INSERT INTO st_homework_manage.biz_algorithm_task_project (ID, TASK_ID, PROJECT_ID, DELETE_FLAG, CREATE_TIME)
+VALUES
+('2106652000000000001', '2106651000000000001', '2106647348441305089', 'NOT_DELETE', NOW()),
+('2106652000000000002', '2106651000000000002', '2106647348441305089', 'NOT_DELETE', NOW()),
+('2106652000000000003', '2106651000000000003', '2106647348441305089', 'NOT_DELETE', NOW())
+ON DUPLICATE KEY UPDATE DELETE_FLAG = 'NOT_DELETE';
+
+-- 6. 添加组长催促记录
+INSERT INTO st_homework_manage.biz_algorithm_urge_log (ID, TASK_ID, PROJECT_ID, LEADER_ID, STUDENT_ID, URGE_MESSAGE, URGE_TIME, DELETE_FLAG, CREATE_TIME)
+VALUES (
+    '2106653000000000001',
+    '2106651000000000001',
+    '2106647348441305089',
+    '2106647348361613314',
+    '2106645602797146114',
+    '组长催促：最长递增子序列算法实训已临近考核期，请尽快登录系统提交代码或工程附件！',
+    NOW(),
+    'NOT_DELETE',
+    NOW()
+) ON DUPLICATE KEY UPDATE DELETE_FLAG = 'NOT_DELETE';

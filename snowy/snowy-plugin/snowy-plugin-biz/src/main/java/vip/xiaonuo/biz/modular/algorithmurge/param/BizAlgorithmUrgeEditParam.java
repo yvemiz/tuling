@@ -1,0 +1,78 @@
+/*
+ * Copyright [2022] [https://www.xiaonuo.vip]
+ *
+ * Snowy采用APACHE LICENSE 2.0开源协议，您在使用过程中，需要注意以下几点：
+ *
+ * 1.请不要删除和修改根目录下的LICENSE文件。
+ * 2.请不要删除和修改Snowy源码头部的版权声明。
+ * 3.本项目代码可免费商业使用，商业使用请保留源码和相关描述文件的项目出处，作者声明等。
+ * 4.分发源码时候，请注明软件出处 https://www.xiaonuo.vip
+ * 5.不可二次分发开源参与同类竞品，如有想法可联系团队xiaonuobase@qq.com商议合作。
+ * 6.若您的项目无法满足以上几点，需要更多功能代码，获取Snowy商业授权许可，请在官网购买授权，地址为 https://www.xiaonuo.vip
+ */
+package vip.xiaonuo.biz.modular.algorithmurge.param;
+
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 算法催交记录编辑参数
+ *
+ * @author antigravity
+ * @date  2026/10/04 13:31
+ **/
+@Getter
+@Setter
+public class BizAlgorithmUrgeEditParam {
+
+    /** 主键ID（雪花ID） */
+    @ExcelProperty("主键ID（雪花ID）")
+    @Schema(description = "主键ID（雪花ID）", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "id不能为空")
+    private String id;
+
+    /** 催交的算法任务ID（关联BIZ_ALGORITHM_TASK.ID） */
+    @ExcelProperty("催交的算法任务ID（关联BIZ_ALGORITHM_TASK.ID）")
+    @Schema(description = "催交的算法任务ID（关联BIZ_ALGORITHM_TASK.ID）")
+    private String taskId;
+
+    /** 所在项目组ID（关联BIZ_PROJECT.ID） */
+    @ExcelProperty("所在项目组ID（关联BIZ_PROJECT.ID）")
+    @Schema(description = "所在项目组ID（关联BIZ_PROJECT.ID）")
+    private String projectId;
+
+    /** 催促组长用户ID（关联SYS_USER.ID） */
+    @ExcelProperty("催促组长用户ID（关联SYS_USER.ID）")
+    @Schema(description = "催促组长用户ID（关联SYS_USER.ID）")
+    private String leaderId;
+
+    /** 被催促的组员学生ID（关联SYS_USER.ID） */
+    @ExcelProperty("被催促的组员学生ID（关联SYS_USER.ID）")
+    @Schema(description = "被催促的组员学生ID（关联SYS_USER.ID）")
+    private String studentId;
+
+    /** 催促消息内容 */
+    @ExcelProperty("催促消息内容")
+    @Schema(description = "催促消息内容")
+    private String urgeMessage;
+
+    /** 催促时间 */
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty("催促时间")
+    @Schema(description = "催促时间")
+    private Date urgeTime;
+
+    /** 排序码 */
+    @ExcelProperty("排序码")
+    @Schema(description = "排序码")
+    private Integer sortCode;
+
+}
