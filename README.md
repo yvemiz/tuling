@@ -192,6 +192,149 @@ st_homework_manage/
 
 ---
 
+## 🤝 团队协作与代码提交规范 (Git Flow & Collaboration)
+
+为了保障主干代码的生产稳定性与多人协作的高效有序，本项目严格执行 **“主分支保护 + 特性分支开发 + PR代码审查 (Code Review)”** 工作流。所有成员均可拉取和提交代码，但**严禁直接 Push 到 `main` 分支**。
+
+```mermaid
+gitGraph
+   commit id: "v1.0-release"
+   branch feature/algo-judge
+   checkout feature/algo-judge
+   commit id: "feat: add judge sandbox"
+   commit id: "test: verify LCA cases"
+   checkout main
+   merge feature/algo-judge id: "PR #1 (Approved & Merged)"
+   branch bugfix/login-sm3
+   checkout bugfix/login-sm3
+   commit id: "fix: sm3 password hash"
+   checkout main
+   merge bugfix/login-sm3 id: "PR #2 (Approved & Merged)"
+```
+
+### 1. 分支管理策略 (Branching Strategy)
+- 🔒 **`main`（受保护主分支）**：
+  - 生产就绪代码基线，**设置强保护规则**；
+  - 只有项目负责人（Owner / Admin）在完成代码审查与本地验证后方可执行合并；
+  - 禁止任何人执行 `git push origin main` 或 `--force` 强推。
+- 🌿 **`feature/<功能名>`（特性开发分支）**：
+  - 用于开发新功能或模块（如 `feature/ranking-radar`、`feature/teacher-cert`）；
+  - 从最新的 `main` 切出，开发测试完毕后向 `main` 提交 Pull Request。
+- 🐞 **`bugfix/<问题名>` 或 `hotfix/<紧急修复>`（缺陷修复分支）**：
+  - 用于修复发现的缺陷或漏洞（如 `bugfix/login-sm3-check`）；
+  - 从 `main` 切出，验证通过后向 `main` 发起 Pull Request。
+
+---
+
+### 2. 团队成员开发全流程实操指南 (Member Workflow)
+
+所有开发人员在日常开发中请严格遵循以下六步法则：
+
+#### 第一步：同步主干最新代码
+在开始任何开发前，先保证本地 `main` 分支为最新：
+```bash
+git checkout main
+git pull origin main
+```
+
+#### 第二步：创建属于自己的特性分支
+切出独立的业务分支，禁止直接在 `main` 分支上写代码：
+```bash
+# 格式：feature/功能简写 或 bugfix/问题简写
+git checkout -b feature/your-feature-name
+```
+
+#### 第三步：本地编码与构建验证
+编写代码，并务必在本地确认编译通过、无语法报错与敏感泄密：
+```bash
+# 后端编译验证
+mvn clean compile -DskipTests
+# 前端构建验证
+npm run build
+```
+
+#### 第四步：提交代码（遵循 Conventional Commits 规范）
+```bash
+git add .
+git commit -m "feat(portal): 增加算法评测运行时间统计展示"
+```
+
+#### 第五步：推送到远程自己的分支
+```bash
+# 将代码推送到远程的 feature 分支（而不是 main 分支！）
+git push -u origin feature/your-feature-name
+```
+
+#### 第六步：在 GitHub 发起 Pull Request (PR)
+1. 访问仓库 [https://github.com/yvemiz/tuling](https://github.com/yvemiz/tuling)；
+2. 页面会弹出提示 **`Compare & pull request`**，点击进入；
+3. Base 分支选择 **`main`**，Compare 分支选择您刚刚推送的 **`feature/your-feature-name`**；
+4. 填写本次修改的简述、自测通过情况及影响范围，点击 **`Create pull request`**；
+5. 通知项目负责人（审查人）进行审查。
+
+---
+
+### 3. 项目负责人（审查人）代码审查与合并指南 (Review & Merge Workflow)
+
+作为项目负责人，当收到成员提交的 PR 后，按以下步骤审查并合并：
+
+#### 方式一：本地审查验证（推荐，最稳妥）
+切到成员的分支，在本地运行确认无误后再合并回主分支：
+```bash
+# 1. 抓取远端所有分支
+git fetch origin
+
+# 2. 切换到成员的 feature 分支
+git checkout feature/your-feature-name
+git pull origin feature/your-feature-name
+
+# 3. 在本地运行项目，检查代码质量、是否包含敏感配置、业务逻辑是否正确
+# 确认一切符合规范后，切回 main 分支进行合并：
+git checkout main
+git pull origin main
+git merge --no-ff feature/your-feature-name
+
+# 4. 推送到远端 main（只有负责人具备 main 推送/合并权限）
+git push origin main
+
+# 5. （可选）删除已完成使命的 feature 分支
+git branch -d feature/your-feature-name
+git push origin --delete feature/your-feature-name
+```
+
+#### 方式二：GitHub 网页端一键审查与合并
+1. 进入 GitHub 仓库的 **Pull requests** 标签页，点击待审查的 PR；
+2. 点击 **`Files changed`** 查看代码具体改动（Diff）；
+3. 确认逻辑无误、构建无冲突后，点击 **`Merge pull request`** ➔ **`Confirm merge`**；
+4. 合并完成后，点击 **`Delete branch`** 自动清理远端废弃分支。
+
+---
+
+### 4. Git Commit 提交信息规范 (Conventional Commits)
+
+提交信息采用结构化规范：`<type>(<scope>): <subject>`，常用类型定义如下：
+
+| 标识 (Type) | 语义说明 | 示例 |
+| :--- | :--- | :--- |
+| `feat` | 新增功能 (Feature) | `feat(oj): 增加代码提交沙箱判题结果展示` |
+| `fix` | 修复缺陷 (Bug Fix) | `fix(auth): 解决前台用户SM3密码哈希比对失败问题` |
+| `docs` | 文档变更 (Documentation) | `docs(readme): 补充团队协作规范与贡献流程` |
+| `style` | 样式与格式变动（不影响代码逻辑） | `style(front-web): 优化天梯榜单移动端对齐样式` |
+| `refactor` | 代码重构（既不修复 bug 也不增加新功能） | `refactor(portal): 提取角色权限感知通用服务工具类` |
+| `perf` | 性能提升 (Performance) | `perf(ranking): 引入 Redis 缓存天梯排行榜综合得分` |
+| `test` | 增加或修改测试用例 | `test(algorithm): 补充二叉树LCA边界判题测试集` |
+| `chore` | 构建流程、依赖或辅助配置调整 | `chore(docker): 调整后端容器内存上限配置` |
+
+---
+
+### 5. 提交安全红线与自查清单 (Security Checklist)
+- ❌ **严禁硬编码隐私信息**：包括服务器真实公网 IP、生产数据库密码、私有 AccessKey/Secret 等；
+- ❌ **严禁提交大文件与二进制包**：切勿将 `deploy.zip`、`*.jar`、本地 `node_modules` 强行提交进仓库；
+- ✅ **确保通过编译**：提交前必须在本地成功执行 `mvn compile` 或 `npm run build`，不得提交无法编译的半成品代码；
+- ✅ **保持原子性**：一个分支只解决一个明确的功能或缺陷，避免超大 PR 难以审查。
+
+---
+
 ## 🛡️ 安全合规与开源说明
 1. **多端令牌隔离**：管理后台采用 `satoken` 独立 Header，前台门户采用 `token` 客户端独立 Header，杜绝越权；
 2. **AI 内容风控**：所有论坛发帖均经由智能语义规则扫描，违规即时拦截，存疑帖流转至联审机制；
