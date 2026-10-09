@@ -516,7 +516,6 @@ CREATE TABLE `biz_forum_board` (
 
 LOCK TABLES `biz_forum_board` WRITE;
 /*!40000 ALTER TABLE `biz_forum_board` DISABLE KEYS */;
-INSERT INTO `biz_forum_board` VALUES ('2106690200000000001','RECRUITMENT','组长招募专区','📢','orange','发布项目组长引才令与招募需求，寻找合伙队友','ALL','ENABLE',1,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690200000000002','COMPETITION_EVENT','官方竞赛发布','🏆','purple','权威发布最新学科竞赛规程、比赛阶段与答辩通知','TEACHER','ENABLE',2,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690200000000003','FOLLOW_EVENT','关注动态速递','⭐','cyan','我关注的竞赛、项目组与导师的最新进展全景广播','ALL','ENABLE',3,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690200000000004','GENERAL','纯算法讨论','💡','blue','算法题解剖析、数据结构优化与疑难代码学术探讨','ALL','ENABLE',4,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690200000000005','JOB_SHARE','求职就业与内推','💼','green','大厂实习经验、校招面经、内推名额与行业资讯交流','ALL','ENABLE',5,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690200000000006','TECH_INCUBATION','创新创业与孵化','🚀','volcano','国家级大学生创新创业训练计划、项目孵化与专利软著分享','ALL','ENABLE',6,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL);
 /*!40000 ALTER TABLE `biz_forum_board` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -746,7 +745,6 @@ CREATE TABLE `biz_portal_config` (
 
 LOCK TABLES `biz_portal_config` WRITE;
 /*!40000 ALTER TABLE `biz_portal_config` DISABLE KEYS */;
-INSERT INTO `biz_portal_config` VALUES ('2106690100000000001','PORTAL_SITE_INFO','站点基础信息','{\"title\":\"大学生学科竞赛与算法实训平台\",\"subTitle\":\"释放创新潜能 · 协同组队攻坚 · 算法精准赋能\",\"logo\":\"\",\"bannerTitle\":\"协同组队 · 算法冲榜 · AI精准赋能\",\"bannerDesc\":\"汇聚全校学科竞赛规程、跨专业组长智能招募、算法作业多维批改、社区智能审查与团队AI诊断评估。\",\"copyright\":\"Copyright © 2026 大学生学科竞赛与算法实训创新平台. All rights reserved.\",\"icp\":\"京ICP备20261001号-1\"}','前台系统名称、副标题、版权等基础信息',1,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690100000000002','PORTAL_BANNERS','首页Banner轮播图','[{\"id\":\"1\",\"title\":\"2026年全国大学生计算机系统能力大赛\",\"subTitle\":\"全新体系结构与操作系统赛道火热报名中！\",\"imgUrl\":\"https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80\",\"link\":\"/competition\",\"sortCode\":1},{\"id\":\"2\",\"title\":\"蓝桥杯全国软件和信息技术专业人才大赛\",\"subTitle\":\"C/C++、Java、Python三大算法赛道集训营启动\",\"imgUrl\":\"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80\",\"link\":\"/algorithm\",\"sortCode\":2},{\"id\":\"3\",\"title\":\"创客项目团队招募雷达\",\"subTitle\":\"寻找志同道合的竞赛队友，组建高水平攻关战队\",\"imgUrl\":\"https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80\",\"link\":\"/project\",\"sortCode\":3}]','前台首页轮播横幅列表',2,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL),('2106690100000000003','PORTAL_PAGE_SETTINGS','各页面字段与文案配置','{\"competitionTitle\":\"🏆 学科竞赛广场\",\"competitionDesc\":\"汇聚国家级、省级与校级顶级学科赛事规程，支持在线创建项目组与报名参战\",\"projectTitle\":\"👥 团队大厅与组长招募墙\",\"projectDesc\":\"跨学科跨专业协同结组，查看各项目团队阵容，投递组长招募需求\",\"algorithmTitle\":\"⚡ 算法集训与作业冲榜\",\"algorithmDesc\":\"精选工业级与竞赛高频算法题目，支持在线编码测评、AI代码诊断与组长协同督促\",\"forumTitle\":\"💬 竞赛社区与研讨论坛\",\"forumDesc\":\"学术探讨、组长招募令、关注动态全自动实时广播；AI智能合规审查 + 组长/教师多级联审\",\"rankingTitle\":\"🥇 卓越项目综合排行榜\",\"rankingDesc\":\"综合团队算法完成度(50%)与竞赛实战活跃度(50%)，由教师联审最终评定\"}','各核心前台业务模块标题与描述文案',3,'NOT_DELETE','2026-10-05 22:24:38',NULL,'2026-10-05 22:24:38',NULL);
 /*!40000 ALTER TABLE `biz_portal_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2168,4 +2166,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-07 13:09:05
+-- Dump completed on 2026-10-07 14:58:53

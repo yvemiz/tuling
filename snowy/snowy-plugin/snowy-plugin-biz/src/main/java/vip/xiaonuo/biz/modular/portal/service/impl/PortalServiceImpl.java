@@ -69,6 +69,7 @@ import vip.xiaonuo.client.modular.user.entity.ClientUser;
 import vip.xiaonuo.client.modular.user.service.ClientUserService;
 import vip.xiaonuo.common.exception.CommonException;
 import vip.xiaonuo.common.pojo.CommonResult;
+import vip.xiaonuo.common.util.CommonCryptogramUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -185,6 +186,15 @@ public class PortalServiceImpl implements PortalService {
             }
         }
         boolean isTeacher = "TEACHER".equalsIgnoreCase(declaredRole);
+        // 如果 extJson 未显式标明，检查教师档案关联
+        if (!isTeacher) {
+            long teacherProfileCount = bizTeacherProfileService.count(new LambdaQueryWrapper<BizTeacherProfile>()
+                    .eq(BizTeacherProfile::getUserId, userId)
+                    .eq(BizTeacherProfile::getDeleteFlag, "NOT_DELETE"));
+            if (teacherProfileCount > 0) {
+                isTeacher = true;
+            }
+        }
         boolean isStudent = !isTeacher;
 
         // 检查是否名下有作为组长的未删除项目
@@ -217,9 +227,11 @@ public class PortalServiceImpl implements PortalService {
         if (user == null) {
             throw new CommonException("账号不存在");
         }
-        // 校验密码（支持明文比对或BCrypt比对）
+        // 校验密码（支持明文比对、国密SM3比对或BCrypt比对）
         boolean pwdMatch = false;
         if (StrUtil.equals(user.getPassword(), param.getPassword())) {
+            pwdMatch = true;
+        } else if (StrUtil.equals(user.getPassword(), CommonCryptogramUtil.doHashValue(param.getPassword()))) {
             pwdMatch = true;
         } else {
             try {
