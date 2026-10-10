@@ -2,7 +2,7 @@
 
 > **GitHub 仓库**：[https://github.com/yvemiz/tuling](https://github.com/yvemiz/tuling)  
 > **线上演示地址**：[https://goofree.xyz/](https://goofree.xyz/)  
-> **使用教程指引**：[前台图文教程 (Markdown)](docs/FRONT_WEB_USER_TUTORIAL.md) | [高清印刷版教程 (PDF)](docs/FRONT_WEB_USER_TUTORIAL.pdf)  
+> **使用教程指引**：[全角色综合图文教程](docs/FRONT_WEB_USER_TUTORIAL.md) | [高清印刷版教程 (PDF)](docs/FRONT_WEB_USER_TUTORIAL.pdf) | [👨‍🎓 学生指南](docs/STUDENT_TUTORIAL.md) | [👑 组长指南](docs/LEADER_TUTORIAL.md) | [👨‍🏫 教师指南](docs/TEACHER_TUTORIAL.md)  
 > **生产部署指南**：[Docker 容器化部署指南](deploy/README_DEPLOY.md)
 
 本项目基于 **小诺（Snowy 3.0）** 高性能微内核架构二次深度定制开发，打造集 **学科竞赛组队全流程管理**、**算法作业在线评测与智能批改**、**多模态合规研讨论坛** 以及 **AI团队诊断评估模型** 于一体的数字化协作实训门户。
@@ -185,10 +185,13 @@ st_homework_manage/
 3. **参赛学生 (STUDENT)**：
    - 前台门户 `http://localhost:5174`（生产环境为 `8080` 或 `83`）点击“立即注册”激活学生档案账号并登录。
 
-4. **前台前端全角色图文使用教程**：
-   - 包含教师、学生、组长三大角色的完整操作指南与真实高清界面截图，详见：
-     - [前台图文教程文档 (docs/FRONT_WEB_USER_TUTORIAL.md)](docs/FRONT_WEB_USER_TUTORIAL.md)
-     - [高清印刷版使用教程 (docs/FRONT_WEB_USER_TUTORIAL.pdf)](docs/FRONT_WEB_USER_TUTORIAL.pdf)
+4. **前台前端全角色图文使用教程与实操手册**：
+   - 包含全角色综合教程、三大角色专属实操分册以及高清界面截图，详见：
+     - 📖 **[全角色综合图文教程 (docs/FRONT_WEB_USER_TUTORIAL.md)](docs/FRONT_WEB_USER_TUTORIAL.md)**
+     - 📄 **[高清印刷版使用教程 (docs/FRONT_WEB_USER_TUTORIAL.pdf)](docs/FRONT_WEB_USER_TUTORIAL.pdf)**
+     - 👨‍🎓 **[《参赛学生实操全指南》(docs/STUDENT_TUTORIAL.md)](docs/STUDENT_TUTORIAL.md)**
+     - 👑 **[《项目组长团队治理与指挥全指南》(docs/LEADER_TUTORIAL.md)](docs/LEADER_TUTORIAL.md)**
+     - 👨‍🏫 **[《指导教师教学督导与评审全指南》(docs/TEACHER_TUTORIAL.md)](docs/TEACHER_TUTORIAL.md)**
 
 ---
 
