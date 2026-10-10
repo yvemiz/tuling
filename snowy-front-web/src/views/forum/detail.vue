@@ -74,9 +74,9 @@
         </a-tag>
       </div>
 
-      <!-- 核心见解文字正文 -->
+      <!-- 核心见解文字正文 (支持 Markdown 与 CSDN 图文混排) -->
       <div class="article-body">
-        <p class="content-text">{{ post.content }}</p>
+        <div class="markdown-rendered-content" v-html="renderedContent"></div>
       </div>
 
       <!-- 多模态展示 1: 算法核心代码精析框 -->
@@ -210,12 +210,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
+import { marked } from 'marked'
 import portalApi from '@/api/portalApi'
 import { useUserStore } from '@/store/user'
+
+marked.setOptions({
+  gfm: true,
+  breaks: true
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -226,6 +232,15 @@ const post = ref(null)
 const comments = ref([])
 const commentInput = ref('')
 const sendingComment = ref(false)
+
+const renderedContent = computed(() => {
+  if (!post.value?.content) return ''
+  try {
+    return marked.parse(post.value.content)
+  } catch (e) {
+    return post.value.content
+  }
+})
 
 const loadDetail = async () => {
   try {
@@ -408,8 +423,122 @@ onMounted(() => {
   font-size: 16px;
   line-height: 1.8;
   color: #334155;
-  white-space: pre-wrap;
   margin-bottom: 24px;
+}
+
+:deep(.markdown-rendered-content) {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #334155;
+  word-break: break-word;
+}
+
+:deep(.markdown-rendered-content h1) {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+  margin-top: 24px;
+  margin-bottom: 14px;
+}
+
+:deep(.markdown-rendered-content h2) {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  border-left: 4px solid #3b82f6;
+  padding-left: 10px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+:deep(.markdown-rendered-content h3) {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+:deep(.markdown-rendered-content p) {
+  margin-bottom: 14px;
+}
+
+:deep(.markdown-rendered-content blockquote) {
+  margin: 14px 0;
+  padding: 12px 18px;
+  background: #f8fafc;
+  border-left: 4px solid #6366f1;
+  border-radius: 0 8px 8px 0;
+  color: #475569;
+  font-size: 14px;
+}
+
+:deep(.markdown-rendered-content img) {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 18px auto;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:deep(.markdown-rendered-content img:hover) {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+:deep(.markdown-rendered-content table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13.5px;
+}
+
+:deep(.markdown-rendered-content th),
+:deep(.markdown-rendered-content td) {
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+:deep(.markdown-rendered-content th) {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+:deep(.markdown-rendered-content tr:nth-child(even)) {
+  background-color: #f8fafc;
+}
+
+:deep(.markdown-rendered-content pre) {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 18px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13.5px;
+  margin: 14px 0;
+}
+
+:deep(.markdown-rendered-content code) {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+}
+
+:deep(.markdown-rendered-content pre code) {
+  background: transparent;
+  color: #38bdf8;
+  padding: 0;
 }
 
 /* 算法代码块暗黑设计 */

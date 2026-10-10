@@ -82,14 +82,18 @@
           </a-col>
         </a-row>
 
-        <!-- 帖子正文描述 -->
-        <a-form-item label="正文描述与核心见解" required>
-          <a-textarea
-            v-model:value="form.content"
-            :rows="6"
-            placeholder="支持输入详尽的实训技术探讨、解题思维破局点、战队愿景或答辩评审避坑经验..."
-            style="font-size: 14px; line-height: 1.6;"
-          />
+        <!-- 帖子正文描述与 CSDN 级图文 Markdown 编辑器 -->
+        <a-form-item label="研讨正文与图文内容 (支持 CSDN 级图文混排、截图 Ctrl+V 粘贴上传与实时分屏)" required>
+          <div class="editor-container-wrap">
+            <div v-if="form.postType === 'GENERAL'" class="template-tip-bar glass-card">
+              <span class="tip-badge">💡 &lt;学术交流与探讨&gt; 专属图文模式</span>
+              <span class="tip-desc">已启用 CSDN 级图文编辑体验：支持富文本排版、截图直接按 <strong>Ctrl+V</strong> 粘贴上传插图、拖拽本地图片上传、分屏实时预览与学术模板一键填入</span>
+            </div>
+            <CsdnMarkdownEditor
+              v-model="form.content"
+              :placeholder="getContentPlaceholder()"
+            />
+          </div>
         </a-form-item>
 
         <!-- 多内容形态 1: 算法题解与核心代码精析专用区域 -->
@@ -237,6 +241,7 @@ import { UploadOutlined } from '@ant-design/icons-vue'
 import portalApi from '@/api/portalApi'
 import { useUserStore } from '@/store/user'
 import { usePortalStore } from '@/store/portal'
+import CsdnMarkdownEditor from '@/components/editor/CsdnMarkdownEditor.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -299,6 +304,19 @@ const getTitlePlaceholder = () => {
   if (form.postType === 'RECRUITMENT') return '如：【创客实训队引才】诚招1名Vue3前端交互与1名算法答辩核心成员'
   if (form.postType === 'COMPETITION_EVENT') return '如：【国赛通关秘籍】第十一届算法实训挑战赛备赛答辩复盘与避坑建议'
   return '输入研讨帖标题，简明扼要阐述研讨核心内容...'
+}
+
+const getContentPlaceholder = () => {
+  if (form.postType === 'GENERAL') {
+    return '请在此撰写学术交流与探讨正文。已启用 CSDN 级图文混排模式：支持截图后直接 Ctrl+V 粘贴上传插图，或点击上方【上传图片】按钮插入图片...'
+  }
+  if (form.postType === 'CODE') {
+    return '请在此撰写算法解题思路、核心证明与复杂度分析...'
+  }
+  if (form.postType === 'RECRUITMENT') {
+    return '请在此详细描述团队项目背景、研发愿景与招募成员期望...'
+  }
+  return '请在此撰写赛事历程、答辩避坑经验与通关秘籍...'
 }
 
 const onPostTypeChange = () => {
@@ -545,5 +563,35 @@ onMounted(() => {
   border: none;
   font-weight: 700;
   padding: 0 32px;
+}
+
+.editor-container-wrap {
+  width: 100%;
+}
+
+.template-tip-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.tip-badge {
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tip-desc {
+  font-size: 13px;
+  color: #1e40af;
 }
 </style>
