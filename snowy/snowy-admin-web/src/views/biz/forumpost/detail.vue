@@ -22,8 +22,8 @@
 			<a-descriptions-item label="审核状态">
 				{{ formData.auditStatus !== undefined && formData.auditStatus !== null ? formData.auditStatus : '-' }}
 			</a-descriptions-item>
-			<a-descriptions-item label="正文内容">
-				{{ formData.content !== undefined && formData.content !== null ? formData.content : '-' }}
+			<a-descriptions-item label="正文内容" :span="2">
+				<div style="white-space: pre-wrap; max-height: 450px; overflow-y: auto; background: #f8fafc; padding: 12px; border-radius: 6px; font-family: monospace;">{{ formData.content !== undefined && formData.content !== null ? formData.content : '-' }}</div>
 			</a-descriptions-item>
 		</a-descriptions>
 		<template #footer>

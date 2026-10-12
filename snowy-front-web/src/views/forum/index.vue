@@ -72,19 +72,31 @@
                 </div>
               </div>
 
-              <div class="post-title-row" @click="$router.push(`/forum/detail/${post.id}`)" style="cursor: pointer;">
-                <h3 class="post-title">{{ post.title }}</h3>
-              </div>
-              <div class="post-content" @click="$router.push(`/forum/detail/${post.id}`)" style="cursor: pointer;">
-                {{ post.content }}
-              </div>
+              <!-- 帖子核心主体（CSDN 风格图文并茂信息流） -->
+              <div class="post-main-layout" @click="$router.push(`/forum/detail/${post.id}`)" style="cursor: pointer;">
+                <div class="post-text-side">
+                  <div class="post-title-row">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                  </div>
+                  <div class="post-snippet">
+                    {{ formatContentSnippet(post.content) }}
+                  </div>
+                  <!-- 多形态内容特征小标签 -->
+                  <div class="post-features-tags" style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
+                    <a-tag v-if="extractFirstImage(post.content)" color="blue" size="small">🖼️ 包含图文插图</a-tag>
+                    <a-tag v-if="post.extData.codeSnippet" color="geekblue" size="small">💻 包含源码题解</a-tag>
+                    <a-tag v-if="post.extData.attachments?.length > 0" color="purple" size="small">📎 包含 {{ post.extData.attachments.length }} 个附件</a-tag>
+                    <a-tag v-if="post.extData.recruitRole" color="orange" size="small">📢 招募 {{ post.extData.recruitRole }}</a-tag>
+                    <a-tag v-for="tag in (post.extData.tags || []).slice(0, 3)" :key="tag" color="cyan" size="small"># {{ tag }}</a-tag>
+                  </div>
+                </div>
 
-              <!-- 多形态内容特征小标签 -->
-              <div class="post-features-tags" v-if="post.extData" @click="$router.push(`/forum/detail/${post.id}`)" style="cursor: pointer; margin: 12px 0; display: flex; gap: 6px; flex-wrap: wrap;">
-                <a-tag v-if="post.extData.codeSnippet" color="geekblue" size="small">💻 包含 {{ post.extData.codeLanguage || '算法' }} 源码题解</a-tag>
-                <a-tag v-if="post.extData.attachments?.length > 0" color="purple" size="small">📎 包含 {{ post.extData.attachments.length }} 个方案附件</a-tag>
-                <a-tag v-if="post.extData.recruitRole" color="orange" size="small">📢 招募 {{ post.extData.recruitRole }}</a-tag>
-                <a-tag v-for="tag in (post.extData.tags || []).slice(0, 3)" :key="tag" color="cyan" size="small"># {{ tag }}</a-tag>
+                <!-- 右侧封面缩略图 (类似 CSDN/掘金/知乎) -->
+                <div v-if="extractFirstImage(post.content)" class="post-cover-side">
+                  <div class="cover-image-container">
+                    <img :src="extractFirstImage(post.content)" alt="文章封面插图" class="cover-thumb" loading="lazy" />
+                  </div>
+                </div>
               </div>
 
               <div class="post-footer">
@@ -362,13 +374,41 @@ const handleLeaderAudit = async (postId, result) => {
   } catch (e) {}
 }
 
+// 提取文章中的第一张图片作为封面缩略图 (自动清洗本地端口)
+const extractFirstImage = (content) => {
+  if (!content) return null
+  const match = content.match(/!\[.*?\]\((.*?)\)/)
+  if (match && match[1]) {
+    return match[1].replace(/^http:\/\/localhost:\d+\/api/, '/api')
+  }
+  return null
+}
+
+// 提炼优雅的纯文本摘要（彻底剔除 raw Markdown 符号与表格乱码）
+const formatContentSnippet = (text) => {
+  if (!text) return ''
+  let cleaned = text
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+    .replace(/```[\s\S]*?```/g, ' [代码示例] ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\|[\s-:]+\|[\s-:]+\|?/g, ' ')
+    .replace(/\|/g, ' ')
+    .replace(/^[#>-]+\s*/gm, '')
+    .replace(/[*_~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (!cleaned) return '点击进入阅读详细图文研讨与代码方案...'
+  return cleaned.length > 130 ? cleaned.slice(0, 130) + '...' : cleaned
+}
+
 const getPostTypeName = (t) => {
   const b = portalStore.boards?.find((item) => item.boardCode === t)
   if (b) return b.boardName
   if (t === 'COMPETITION_EVENT') return '官方竞赛'
   if (t === 'RECRUITMENT') return '组长招聘'
   if (t === 'FOLLOW_EVENT') return '关注动态'
-  return '学术交流'
+  return '通用研讨'
 }
 
 const getPostTypeColor = (t) => {
@@ -473,15 +513,76 @@ onMounted(() => {
   font-size: 17px;
   font-weight: 800;
   color: #1e293b;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  transition: color 0.2s ease;
 }
 
-.post-content {
-  font-size: 14px;
-  color: #334155;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  margin-bottom: 16px;
+.post-main-layout:hover .post-title {
+  color: #3b82f6;
+}
+
+/* CSDN 级左文右图卡片布局 */
+.post-main-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin: 8px 0 14px 0;
+}
+
+.post-text-side {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-snippet {
+  font-size: 13.5px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.post-cover-side {
+  flex-shrink: 0;
+  width: 156px;
+  height: 98px;
+}
+
+.cover-image-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.cover-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.post-main-layout:hover .cover-thumb {
+  transform: scale(1.05);
+}
+
+@media (max-width: 640px) {
+  .post-main-layout {
+    flex-direction: column-reverse;
+  }
+  .post-cover-side {
+    width: 100%;
+    height: 140px;
+  }
 }
 
 .post-footer {

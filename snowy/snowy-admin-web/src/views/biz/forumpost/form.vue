@@ -23,7 +23,7 @@
 				<a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
 					<a-form-item label="帖子类别：" name="postType">
 						<a-select v-model:value="formData.postType" placeholder="请选择帖子类别" allow-clear>
-							<a-select-option value="GENERAL">普通交流</a-select-option>
+							<a-select-option value="GENERAL">通用研讨 (GENERAL)</a-select-option>
 							<a-select-option value="RECRUITMENT">组长招聘</a-select-option>
 							<a-select-option value="FOLLOW_EVENT">关注动态</a-select-option>
 							<a-select-option value="COMPETITION_EVENT">竞赛发布</a-select-option>
@@ -50,7 +50,7 @@
 				</a-col>
 				<a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 					<a-form-item label="正文内容：" name="content">
-						<a-textarea v-model:value="formData.content" :rows="4" placeholder="请输入正文内容" allow-clear />
+						<a-textarea v-model:value="formData.content" :rows="8" placeholder="请输入正文内容（支持Markdown图文混排语法）" allow-clear />
 					</a-form-item>
 				</a-col>
 			</a-row>

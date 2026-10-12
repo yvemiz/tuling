@@ -10,7 +10,7 @@
 					<a-col :xs="24" :sm="12" :md="8" :lg="6">
 						<a-form-item name="postType" label="帖子类别">
 							<a-select v-model:value="searchFormState.postType" placeholder="请选择帖子类别" allow-clear>
-								<a-select-option value="GENERAL">普通交流 (GENERAL)</a-select-option>
+								<a-select-option value="GENERAL">通用研讨 (GENERAL)</a-select-option>
 								<a-select-option value="RECRUITMENT">组长招聘 (RECRUITMENT)</a-select-option>
 								<a-select-option value="FOLLOW_EVENT">关注动态 (FOLLOW_EVENT)</a-select-option>
 								<a-select-option value="COMPETITION_EVENT">竞赛发布 (COMPETITION_EVENT)</a-select-option>
